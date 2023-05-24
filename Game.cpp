@@ -1,8 +1,9 @@
 #include "Game.h"
 #include "Header.h"
 
-Game::Game(sf::RenderWindow& window) : win(window)
+Game::Game(sf::RenderWindow& window) : win(window),is_enter_pressed(false), run_game(true)
 {
+	win.setFramerateLimit(60);
 	bg_texture.loadFromFile("assets/bg.png");
 	bg_sprite.setTexture(bg_texture);
 	bg_sprite.setScale(SCALE_FACTOR, SCALE_FACTOR);
@@ -33,8 +34,21 @@ void Game::startGameLoop()
 			{
 				win.close();
 			}
+			if (event.type == sf::Event::KeyPressed && run_game)
+			{
+				if (event.key.code == sf::Keyboard::Enter && !is_enter_pressed)
+				{
+					is_enter_pressed = true;
+					bird.setShouldFly(true);
+				}
+				if (event.key.code == sf::Keyboard::Space && is_enter_pressed)
+				{
+					bird.flapBird(dt);
+				}
+			}
 		}
 		moveGround(dt);
+		bird.update(dt);
 
 		draw();
 		// display window
@@ -47,6 +61,7 @@ void Game::draw()
 	win.draw(bg_sprite);
 	win.draw(ground_sprite1);
 	win.draw(ground_sprite2);
+	win.draw(bird.bird_sprite);
 }
 
 void Game::moveGround(sf::Time& dt)
