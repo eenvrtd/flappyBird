@@ -9,5 +9,7 @@ public:
 private:
 	sf::Texture bg_texture, ground_texture;
 	sf::Sprite bg_sprite, ground_sprite1, ground_sprite2;
+	const int move_speed = 270;
 	void draw();
+	void moveGround(sf::Time&);
 };
